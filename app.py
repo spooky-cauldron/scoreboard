@@ -5,7 +5,12 @@ import redis
 from flask import Flask
 
 from middleware import body
-from schema import PostScoreboardBody, PostScoreboardResponse
+from schema import (
+    PatchTeamScoreBody,
+    PatchTeamScoreResponse,
+    PostScoreboardBody,
+    PostScoreboardResponse,
+)
 
 app = Flask('scoreboard')
 
@@ -27,6 +32,13 @@ def get_board_data(board_id: str):
 @app.get('/scoreboard/<board_id>/data/<team>')
 def get_board_team_score(board_id: str, team: str):
     return r.hget(f'board:{board_id}:data', team)
+
+
+@app.patch('/scoreboard/<board_id>/data/<team>')
+@body(PatchTeamScoreBody)
+def patch_board_team_score(body: PatchTeamScoreBody, board_id: str, team: str):
+    total_score = r.hincrby(f'board:{board_id}:data', team, body.amount)
+    return PatchTeamScoreResponse(score=total_score).model_dump()
 
 
 @app.post('/scoreboard')

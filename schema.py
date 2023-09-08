@@ -8,3 +8,11 @@ class PostScoreboardBody(BaseModel):
 
 class PostScoreboardResponse(PostScoreboardBody):
     id: str
+
+
+class PatchTeamScoreBody(BaseModel):
+    amount: int
+
+
+class PatchTeamScoreResponse(BaseModel):
+    score: int

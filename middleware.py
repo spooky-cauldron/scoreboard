@@ -14,7 +14,6 @@ def body(data_type: type):
         def wrapper(*args, **kwargs):
             try:
                 validated_body = data_type(**request.json)
-                return func(validated_body, *args, **kwargs)
             except ValidationError as e:
                 log.debug('Error validating data.')
                 err_response = json.loads(e.json())
@@ -23,5 +22,6 @@ def body(data_type: type):
                         del err['url']
                 log.debug(f'Validation Error: {err_response}')
                 return err_response
+            return func(body=validated_body, *args, **kwargs)
         return wrapper
     return body_decorator
