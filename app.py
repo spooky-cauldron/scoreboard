@@ -15,7 +15,13 @@ from schema import (
 
 app = Flask('scoreboard')
 log = logging.getLogger()
-redis_client = None
+redis_host = os.getenv('REDIS_HOST', 'localhost')
+redis_port = int(os.getenv('REDIS_PORT', '6379'))
+redis_client = Redis(
+    host=redis_host,
+    port=redis_port,
+    decode_responses=True
+)
 
 
 @app.get('/scoreboard/<board_id>')
@@ -57,14 +63,6 @@ def post_board(body: PostScoreboardBody):
 
 
 if __name__ == '__main__':
-    redis_host = os.getenv('REDIS_HOST', 'localhost')
-    redis_port = int(os.getenv('REDIS_PORT', '6379'))
-    redis_client = Redis(
-        host=redis_host,
-        port=redis_port,
-        decode_responses=True
-    )
-
     app_host = os.getenv('APP_HOST', 'localhost')
     app_port = int(os.getenv('APP_PORT', '8080'))
     app.run(host=app_host, port=app_port)
