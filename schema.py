@@ -6,6 +6,14 @@ class PostScoreboardBody(BaseModel):
     teams: list[str] = Field(min_length=1, max_length=1024)
 
 
+class ScoreboardInfo(BaseModel):
+    name: str
+
+
+class ScoreResponse(BaseModel):
+    score: int
+
+
 class PostScoreboardResponse(PostScoreboardBody):
     id: str
 
